@@ -3,7 +3,8 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background-color: #fcc5f124;
+    background-image: url(../images/greenJianbian.jpeg);
+    background-size: cover;
 }
 
 /* 顶部容器 */
