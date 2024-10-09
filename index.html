@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教育数据筛选页面</title>
+    <!-- 引入CSS文件 -->
+    <link rel="stylesheet" href="./css/index.css">
+    
+    
+</head>
+
+<body>
+    <!-- 顶部容器 -->
+ 
+
+    <!-- 内容容器 -->
+    <div class="content">
+        <!-- 左侧导航栏：筛选条件 -->
+        <div class="filter-bar">
+            <h3>筛选条件</h3>
+            <label>性别</label>
+            <select id="gender">
+                <option value="">全部</option>
+                <option value="1">男</option>
+                <option value="2">女</option>
+            </select>
+
+            <label>年级</label>
+            <select id="grade">
+                <option value="">全部</option>
+                <option value="1">七年级</option>
+                <option value="2">八年级</option>
+                <option value="3">九年级</option>
+            </select>
+
+            <label>家庭居住地</label>
+            <select id="residence">
+                <option value="">全部</option>
+                <option value="1">农村</option>
+                <option value="2">城镇</option>
+            </select>
+
+            <label>独生状况</label>
+            <select id="onlyChild">
+                <option value="">全部</option>
+                <option value="1">独生</option>
+                <option value="2">非独生</option>
+            </select>
+
+            <label>留守状况</label>
+            <select id="leftBehind">
+                <option value="">全部</option>
+                <option value="1">留守儿童</option>
+                <option value="2">非留守儿童</option>
+            </select>
+
+            <label>家庭结构</label>
+            <select id="familyStructure">
+                <option value="">全部</option>
+                <option value="1">双亲</option>
+                <option value="2">单亲</option>
+            </select>
+
+            <button id="filterButton">应用筛选</button>
+        </div>
+
+        <!-- 右侧展示数据的区域 -->
+        <div class="data-container">
+
+            <div class="checkbox-container">
+                <!-- 无边框的复选框 -->
+                <input type="checkbox" id="visualCheckbox">
+                <label for="visualCheckbox">可视化</label>
+            </div>
+            <h2>筛选结果</h2>
+            <div id="dataOutput">
+                <!-- 数据输出区域 -->
+                <table id="dataOutputTable">
+                    <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <th>性别</th>
+                            <th>年龄</th>
+                            <th>年级</th>
+                            <th>家庭住址</th>
+                            <th>独生状况</th>
+                            <th>留守儿童</th>
+                            <th>家庭结构</th>
+                            <th>父母教育期望</th>
+                            <th>孩子教育期望</th>
+                            <th>学业自我效能感</th>
+                            <th>学业倦怠</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 数据行将在这里动态插入 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入JS文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/echarts.min.js"></script> <!-- 确保 ECharts 文件路径正确 -->
+    <script src="./js/script.js"></script>
+</body>
+
+</html>

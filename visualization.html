@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>可视化大屏</title>
+	<!-- 使用外部 CDN 引入必要的库和样式文件 -->
+	<!-- 引入 CSS 文件 -->
+	<link rel="stylesheet" href="css/iconfont.css">
+	<link rel="stylesheet" href="./css/test-1024.css?v=20241008"> <!-- 根据屏幕尺寸引入适配的 CSS 文件 -->
+	<!-- 引入 JS 文件 -->
+	<script src="js/jquery.min.js"></script> <!-- 确保 js 文件路径正确 -->
+	<script src="js/echarts.min.js"></script> <!-- 确保 ECharts 文件路径正确 -->
+</head>
+<body>
+<div class="container-header">
+    <ul class="nowTime">
+        <li></li>
+        <li></li>
+    </ul>
+    <div class="location">
+        <i class="icon iconfont icon-buoumaotubiao23"></i>
+        <span class="areaName"></span>
+    </div>
+    <h3>“代际差异视域下亲子教育期望”数据可视化大平台</h3>
+</div>
+<div class="container-content">
+    <div class="top">
+		<div class="count-base" >
+			<div class="com-count-title">家长教育期望饼图</div>
+			<div class="com-screen-content">
+				<ul class="use-data"></ul>
+				<!--现在这里要放图表-->
+				<div id="main1" style="width:100%;height:300px;"></div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+		<div class="count-resource q1">
+			<div class="com-count-title">孩子自我期望饼图</div>
+			<div class="com-screen-content2">
+				<ul class="use-data">
+					
+				</ul>
+				<div class="com-screen-content">
+				 <div id="main2" style="margin-top:10px;width:100%;height:240px;"></div>
+				</div>
+				<span class="left-top"></span>
+				<span class="right-top"></span>
+				<span class="left-bottom"></span>
+				<span class="right-bottom"></span>
+			</div>
+		</div>
+		<div class="count-resource q2">
+			<div class="com-count-title">代际教育期望对比图</div>
+			<div class="com-screen-content">
+				<ul class="use-data">
+
+				</ul>
+			 <div id="main3" style="margin-top:10px;width:100%;height:240px;"></div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+    </div>
+
+	<div>
+		<div class="count-base">
+			<div class="com-count-title">学业自我效能感饼图</div>
+			<div class="com-screen-content">
+				<ul class="use-data">
+				</ul>
+				<div id="main4" style="width:100%;height:300px;"></div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+		<div class="count-resource q1">
+			<div class="com-count-title">学业倦怠饼图</div>
+			<div class="com-screen-content2">
+				<ul class="use-data">
+				</ul>
+				<div class="com-screen-content">
+					<div id="main5" style="margin-top:10px;width:100%;height:240px;"></div>
+				</div>
+				<span class="left-top"></span>
+				<span class="right-top"></span>
+				<span class="left-bottom"></span>
+				<span class="right-bottom"></span>
+			</div>
+		</div>
+		<div class="count-resource q2">
+			<div class="com-count-title">学业效能倦怠相关图</div>
+			<div class="com-screen-content">
+				<ul class="use-data">
+		
+				</ul>
+				<div id="main6" style="margin-top:10px;width:100%;height:240px;"></div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+	</div>
+
+	<div class="mid">
+		<div class="count-share w1" >
+			<div class="com-count-title">代际期望与学业效能关系图</div>
+			<div class="com-screen-content">
+				    <div class="topRec_List">
+						<div  id="main7" style="width:100%;height:300px;">
+						
+						</div>
+					</div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+		<div class="count-share w2" >
+			<div class="com-count-title">代际期望与学业倦怠关系图</div>
+			<div class="com-screen-content">
+			 <div id="main8" style="width:100%;height:300px;"></div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+	</div>
+	<div>
+		<div class="count-base">
+			<div class="com-count-title">学生年级柱状图</div>
+			<div class="com-screen-content">
+				<ul class="use-data">
+				</ul>
+				<div id="main9" style="width:100%;height:300px;"></div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+		<div class="count-resource q1">
+			<div class="com-count-title">学生性别饼图</div>
+			<div class="com-screen-content2">
+				<ul class="use-data">
+				</ul>
+				<div class="com-screen-content">
+					<div id="main10" style="margin-top:10px;width:100%;height:240px;"></div>
+				</div>
+				<span class="left-top"></span>
+				<span class="right-top"></span>
+				<span class="left-bottom"></span>
+				<span class="right-bottom"></span>
+			</div>
+		</div>
+		<div class="count-resource q2">
+			<div class="com-count-title">家庭居住地方饼图</div>
+			<div class="com-screen-content">
+				<ul class="use-data">
+	
+				</ul>
+				<div id="main11" style="margin-top:10px;width:100%;height:240px;"></div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+	</div>
+	
+	<div class="bottom">
+		<div class="count-topic e1" >
+			<div class="com-count-title">独生状况饼图</div>
+			<div class="com-screen-content">
+			<div id="main12" style="width:100%;height:300px;"></div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+		<div class="count-topic e2" >
+			<div class="com-count-title">留守儿童饼图</div>
+			<div class="com-screen-content">
+			 <div id="main13" style="width:100%;height:300px;"></div>
+			</div>
+			<span class="left-top"></span>
+			<span class="right-top"></span>
+			<span class="left-bottom"></span>
+			<span class="right-bottom"></span>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+</div>
+
+<script type="text/javascript"> 
+//根据不同的分辨率调用不同的css和js
+	if(window.screen.width>=1600){
+		document.write("<link href='css/test-1920.css' rel='stylesheet' type='text/css'>");  
+		
+		document.writeln("<script type=\"text/javascript\" src=\"js/test-1920.js\"><\/script>");
+	}
+	else if(window.screen.width<1600&&window.screen.width>=1280){
+		document.write("<link href='css/test-1280.css' rel='stylesheet' type='text/css'>");  
+		
+		document.writeln("<script type=\"text/javascript\" src=\"js/test-1280.js\"><\/script>");
+	}else{
+	document.write("<link href='css/test-1024.css' rel='stylesheet' type='text/css'>");  
+		
+		document.writeln("<script type=\"text/javascript\" src=\"js/test-1024.js\"><\/script>");
+	}
+</script>
+<!--大屏-->
+<script type="text/javascript"> 
+	  function autoScroll(obj){  
+			$(obj).find("ul").animate({  
+				marginTop : "-39px"  
+			},500,function(){  
+				$(this).css({marginTop : "0px"}).find("li:first").appendTo(this);  
+			})  
+		}  
+		$(function(){  
+			setInterval('autoScroll(".maquee")',2000);
+		}) 
+</script> 
+<script src="js/visualization.js"></script>
+</body>
+</html>
