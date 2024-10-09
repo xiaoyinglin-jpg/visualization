@@ -76,11 +76,19 @@ const stats = {
             high: 0,     // <= 4
             veryHigh: 0  // <= 5
         }
+    },
+
+    // 家庭结构数据统计
+    familyStructureCount: {
+        singleParent: 0, // 单亲总数  
+        dualParent: 0    // 双亲总数  
     }
 };
 
 // 学业效能和学业倦怠散点图数据
 const aseAbData = [];
+
+
 
 // 代际期望差距和学业效能和学业倦怠的关系图数据
 // 定义统计结构（基于代际教育期望差距） - 包含 ToASE 和 ToAB
@@ -174,9 +182,18 @@ data.forEach(row => {
     // 收集ASE和AB的数据
     const ASE_data = parseFloat(row.ASE);
     const AB_data = parseFloat(row.AB);
-    aseAbData.push({ ASE_data, AB_data })
+    const label = row.name; // 从数据中获取学生姓名
+    // 确保 ASE_data 和 AB_data 是有效数值
+    if (!isNaN(ASE_data) && !isNaN(AB_data)) {
+        aseAbData.push({
+            ASE_data,
+            AB_data,
+            label: label || '未知学生' // 如果没有姓名，用默认值
+        });
+    }
+    console.log('aseAbData:', aseAbData); // 输出检查数据格式
 
-    // 收集对应的ASE和ABE数据
+    // 收集对应的ASE和AB数据
     const gap = Math.abs(EE_Post_P - EE_Post_S); // 计算差值的绝对值
     const ToASE = parseFloat(row.ASE);
     const ToAB = parseFloat(row.AB);
@@ -211,6 +228,13 @@ data.forEach(row => {
         // 统计每个组的总数
         intergenerationalGapStats[gapCategory].count++;
     }
+
+    // 统计单亲和双亲数据 （1是双亲，2是单亲）
+    if (row.familyStructure === "1") {
+        stats.familyStructureCount.dualParent++;
+    } else if (row.familyStructure === "2") {
+        stats.familyStructureCount.singleParent++;
+    }  
     
 
 });
@@ -290,93 +314,7 @@ const datasetSourceToAB = [
     ['非常高', gapProportions.noGap.ToAB.veryHigh || 0, gapProportions.smallGap.ToAB.veryHigh || 0, gapProportions.significantGap.ToAB.veryHigh || 0, gapProportions.largeGap.ToAB.veryHigh || 0]
 ];
 
-/* // 生成 ECharts 数据格式（ToASE 数据）
-const datasetSourceToASE = [
-    ['Level', '几乎没有差距', '较小差距', '显著差距', '巨大差距'],
-    ['非常低', gapProportions.noGap.ToASE.veryLow, gapProportions.smallGap.ToASE.veryLow, gapProportions.significantGap.ToASE.veryLow, gapProportions.largeGap.ToASE.veryLow],
-    ['比较低', gapProportions.noGap.ToASE.low, gapProportions.smallGap.ToASE.low, gapProportions.significantGap.ToASE.low, gapProportions.largeGap.ToASE.low],
-    ['不确定', gapProportions.noGap.ToASE.moderate, gapProportions.smallGap.ToASE.moderate, gapProportions.significantGap.ToASE.moderate, gapProportions.largeGap.ToASE.moderate],
-    ['比较高', gapProportions.noGap.ToASE.high, gapProportions.smallGap.ToASE.high, gapProportions.significantGap.ToASE.high, gapProportions.largeGap.ToASE.high],
-    ['非常高', gapProportions.noGap.ToASE.veryHigh, gapProportions.smallGap.ToASE.veryHigh, gapProportions.significantGap.ToASE.veryHigh, gapProportions.largeGap.ToASE.veryHigh]
-];
-
-// 生成 ECharts 数据格式（ToAB 数据）
-const datasetSourceToAB = [
-    ['Level', '几乎没有差距', '较小差距', '显著差距', '巨大差距'],
-    ['非常低', gapProportions.noGap.ToAB.veryLow, gapProportions.smallGap.ToAB.veryLow, gapProportions.significantGap.ToAB.veryLow, gapProportions.largeGap.ToAB.veryLow],
-    ['比较低', gapProportions.noGap.ToAB.low, gapProportions.smallGap.ToAB.low, gapProportions.significantGap.ToAB.low, gapProportions.largeGap.ToAB.low],
-    ['不确定', gapProportions.noGap.ToAB.moderate, gapProportions.smallGap.ToAB.moderate, gapProportions.significantGap.ToAB.moderate, gapProportions.largeGap.ToAB.moderate],
-    ['比较高', gapProportions.noGap.ToAB.high, gapProportions.smallGap.ToAB.high, gapProportions.significantGap.ToAB.high, gapProportions.largeGap.ToAB.high],
-    ['非常高', gapProportions.noGap.ToAB.veryHigh, gapProportions.smallGap.ToAB.veryHigh, gapProportions.significantGap.ToAB.veryHigh, gapProportions.largeGap.ToAB.veryHigh]
-]; */
-
 console.log(intergenerationalGapStats);
-
-
-
-
-// 生成散点图
-// const chartDom = document.getElementById('main');
-// const chart = echarts.init(chartDom);
-// const option = {
-//     xAxis: {
-//         type: 'value',
-//         name: 'ASE',
-//         nameLocation: 'middle',
-//         nameGap: 30
-//     },
-//     yAxis: {
-//         type: 'value',
-//         name: 'AB',
-//         nameLocation: 'middle',
-//         nameGap: 30
-//     },
-//     series: [
-//         {
-//             aseAbData,
-//             type: 'scatter'
-//         }
-//     ]
-// };
-// chart.setOption(option);
-
-// 生成饼图
-// const chartDom = document.getElementById('main');
-// const chart = echarts.init(chartDom);
-// const option = {
-//     tooltip: {
-//         trigger: 'item'
-//     },
-//     legend: {
-//
-
-
-
-    /* for (let key in categories) {
-        const container = document.getElementById(`main${categories[key]}`);
-        const values = data.map(row => row[key]);
-
-        // 在此处实现数据可视化，例如使用 Chart.js 或其他库
-        // 假设使用一个简单的示例
-        const chartData = countValues(values);
-        drawChart(container, chartData);
-    } 
-}*/
-
-/* function countValues(values) {
-    const counts = {};
-    values.forEach(value => {
-        counts[value] = (counts[value] || 0) + 1;
-    });
-    return counts;
-}
-
-function drawChart(container, data) {
-    // 此处实现图表绘制
-    container.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-}
- */
-
 
 // 家长期望饼图 main1
 // 实例化对象
@@ -392,9 +330,8 @@ var option1 = {
     },
     series: [
         {
-            name: 'Access From',
             type: 'pie',
-            radius: ['30%', '60%'],
+            radius: ['30%', '70%'],
             avoidLabelOverlap: true,  // 确保标签不重叠
             label: {
                 show: true,  // 显示标签
@@ -444,18 +381,17 @@ var option2 = {
     },
     series: [
         {
-            name: 'Access From',
             type: 'pie',
             radius: ['30%', '70%'],
-            avoidLabelOverlap: false,
+            avoidLabelOverlap: true,
             label: {
                 show: false,
-                position: 'center',
+                position: 'outside',
             },
             emphasis: {
                 label: {
                     show: true,
-                    fontSize: 30,
+                    fontSize: 40,
                     fontWeight: 'bold'
                 }
             },
@@ -553,7 +489,6 @@ var option4 = {
     },
     series: [
         {
-            name: 'Access From',
             type: 'pie',
             radius: ['30%', '70%'],
             avoidLabelOverlap: true,
@@ -595,7 +530,7 @@ var option4 = {
 // 把配置项给实例对象
 myChart4.setOption(option4);
 
-// 学业倦怠饼图 main4
+// 学业倦怠饼图 main5
 //实例化对象
 var myChart5 = echarts.init(document.getElementById('main5'));
 
@@ -609,17 +544,17 @@ var option5 = {
     },
     series: [
         {
-            name: 'Access From',
             type: 'pie',
-            radius: ['40%', '70%'],
-            avoidLabelOverlap: false,
+            radius: ['30%', '70%'],
+            avoidLabelOverlap: true,
             padAngle: 5,
             itemStyle: {
                 borderRadius: 10
             },
             label: {
                 show: false,
-                position: 'center'
+                position: 'center',
+                position: 'outside' // 将标签放置在外侧
             },
             emphasis: {
                 label: {
@@ -629,7 +564,7 @@ var option5 = {
                 }
             },
             labelLine: {
-                show: false
+                show: true
             },
             data: [
                 { value: stats.AB.intervals.veryLow, name: '非常低' },
@@ -643,29 +578,31 @@ var option5 = {
 };
 
 // 把配置项给实例对象
-myChart5.setOption(option5);
+myChart5.setOption(option5); 
 
 // 学业效能和学业倦怠图 main6
 var myChart6 = echarts.init(document.getElementById('main6'));
 var option6 = {
-   
     tooltip: {
         formatter: function (params) {
-            return `${params.data.label}<br/>ASE: ${params.data.ASE_data}<br/>AB: ${params.data.AB_data}`;
+            const label = params.data.label || '未知学生';
+            const ASE = params.data.ASE_data;
+            const AB = params.data.AB_data;
+            return `${label}<br/>学业效能: ${ASE}<br/>学业倦怠: ${AB}`;
         }
     },
     xAxis: {
-        name: '学业效能 (ASE)',
+        name: '学业效能',
         type: 'value'
     },
     yAxis: {
-        name: '学业倦怠 (AB)',
+        name: '学业倦怠',
         type: 'value'
     },
     grid: {
         left: '10%',
-        right: '25%', // 调整右边留白
-        bottom: '10%',
+        right: '23%', // 调整右边留白
+        bottom: '3%',
         top: '20%',
         containLabel: true // 包含刻度标签
     },
@@ -673,10 +610,9 @@ var option6 = {
         type: 'scatter',
         data: aseAbData.map(item => ({
             value: [item.ASE_data, item.AB_data],
-            label: {
-                show: true,
-                formatter: item.label
-            }
+            ASE_data: item.ASE_data,
+            AB_data: item.AB_data,
+            label: item.label // 确保 label 是字符串
         })),
         symbolSize: 10,
         itemStyle: {
@@ -686,6 +622,7 @@ var option6 = {
 };
 
 myChart6.setOption(option6);
+
 
 // 代际差距下自我效能等级图 main7
 var myChart7 = echarts.init(document.getElementById('main7'));
@@ -703,17 +640,19 @@ var option7 = {
         left: 'left'
     },
     grid: {
-        top:'18%',
+        top:'20%',
         left: '3%',
-        right: '4%',
-        bottom: '0%',
+        right: '15%',
+        bottom: '5%',
         containLabel: true
     },
     xAxis: {
+        name: '代际期望差距',
         type: 'value',
         boundaryGap: [0, 0.01]
     },
     yAxis: {
+        name: '学业效能等级',
         type: 'category',
         data: ['非常低', '比较低', '不确定', '比较高', '非常高']
     },
@@ -758,16 +697,19 @@ var option8 = {
         left: 'left'
     },
     grid: {
+        top: '20%',
         left: '3%',
-        right: '4%',
-        bottom: '3%',
+        right: '15%',
+        bottom: '5%',
         containLabel: true
     },
     xAxis: {
+        name: '代际期望差距',
         type: 'value',
         boundaryGap: [0, 0.01]
     },
     yAxis: {
+        name: '学业倦怠等级',
         type: 'category',
         data: ['非常低', '比较低', '不确定', '比较高', '非常高']
     },
@@ -799,116 +741,22 @@ var option8 = {
 myChart8.setOption(option8);
 
 
-/* var myChart7 = echarts.init(document.getElementById('main7'));
-var option7 = {
-    title: {
-        text: '父子期望差距与 ASE 和 AB 水平的比例分布',
-        left: 'center'
-    },
-    tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b}: {c} ({d}%)'
-    },
-    legend: {
-        orient: 'vertical',
-        left: 'left',
-        data: ['无差距', '小差距', '显著差距', '大差距']
-    },
-    grid: {
-        containLabel: true
-    },
-    series: [
-        {
-            name: 'ASE 水平',
-            type: 'pie',
-            radius: '40%',
-            center: ['25%', '50%'],
-            data: [
-                { value: gapProportions.noGap.ToASE.veryLow, name: '无差距' },
-                { value: gapProportions.smallGap.ToASE.veryLow, name: '小差距' },
-                { value: gapProportions.significantGap.ToASE.veryLow, name: '显著差距' },
-                { value: gapProportions.largeGap.ToASE.veryLow, name: '大差距' }
-            ],
-            emphasis: {
-                itemStyle: {
-                    shadowBlur: 10,
-                    shadowOffsetX: 0,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                }
-            }
-        },
-        {
-            name: 'AB 水平',
-            type: 'pie',
-            radius: '40%',
-            center: ['75%', '50%'],
-            data: [
-                { value: gapProportions.noGap.ToAB.veryLow, name: '无差距' },
-                { value: gapProportions.smallGap.ToAB.veryLow, name: '小差距' },
-                { value: gapProportions.significantGap.ToAB.veryLow, name: '显著差距' },
-                { value: gapProportions.largeGap.ToAB.veryLow, name: '大差距' }
-            ],
-            emphasis: {
-                itemStyle: {
-                    shadowBlur: 10,
-                    shadowOffsetX: 0,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                }
-            }
-        }
-    ]
-};
-myChart7.setOption(option7);
-console.log(option7.series);
- */
 
-/* var myChart7 = echarts.init(document.getElementById('main7'));
-var option7 = {
-    tooltip: {
-        trigger: 'axis',
-        axisPointer: { type: 'shadow' }
-    },
-    legend: { top: 'bottom' },
-    dataset: {
-        source: datasetSourceToASE
-    },
-    xAxis: { type: 'category' },
-    yAxis: { type: 'value' },
-    series: [
-        { type: 'bar', name: '几乎没有差距' },
-        { type: 'bar', name: '较小差距' },
-        { type: 'bar', name: '显著差距' },
-        { type: 'bar', name: '巨大差距' }
-    ]
-};
-myChart7.setOption(option7);
-
-// 代际差距下学业疲惫图main8
-var myChart8 = echarts.init(document.getElementById('main8'));
-var option8 = {
-    tooltip: {
-        trigger: 'axis',
-        axisPointer: { type: 'shadow' }
-    },
-    legend: { top: 'bottom' },
-    dataset: {
-        source: datasetSourceToAB
-    },
-    xAxis: { type: 'category' },
-    yAxis: { type: 'value' },
-    series: [
-        { type: 'bar' },
-        { type: 'bar' },
-        { type: 'bar' },
-        { type: 'bar' }
-    ]
-};
-myChart8.setOption(option8);
- */
 // 年级柱状图 main9
 // 实例化对象
+
 var myChart9 = echarts.init(document.getElementById('main9'));
 var option9 = {
+    tooltip: {
+        trigger: 'axis', // 设置为 'axis' 可以在悬停时显示当前轴上所有数据
+        axisPointer: {
+            type: 'shadow' // 将指示器类型设置为阴影指示器，更适合柱状图
+        },
+        formatter: function (params) {
+            const data = params[0]; // 获取当前悬停的数据点信息
+            return `${data.name}: ${data.value}`;
+        }
+    },
     xAxis: {
         type: 'category',
         data: ['七年级', '八年级', '九年级'],
@@ -947,6 +795,7 @@ var option9 = {
 myChart9.setOption(option9);
 
 
+
 // 学生性别饼图
 var myChart10 = echarts.init(document.getElementById('main10'));
 var option10 = {
@@ -960,7 +809,6 @@ var option10 = {
     },
     series: [
         {
-            name: 'Access From',
             type: 'pie',
             radius: '80%',
             data: [
@@ -993,12 +841,11 @@ var option11 = {
     },
     series: [
         {
-            name: 'Access From',
             type: 'pie',
             radius: '80%',
             data: [
                 { value: stats.residence.rural, name: '农村' },
-                { value: stats.residence.urban, name: '城市' },
+                { value: stats.residence.urban, name: '城镇' },
 
             ],
             emphasis: {
@@ -1042,16 +889,17 @@ var option12 = {
         {
             name: '男',
             type: 'bar',
-            data: [stats.onlyChildGender.onlyChildMale, stats.onlyChildGender.onlyChildMale]
+            data: [stats.onlyChildGender.onlyChildMale, stats.onlyChildGender.nonOnlyChildMale]  
         },
         {
             name: '女',
             type: 'bar',
-            data: [stats.onlyChildGender.nonOnlyChildFemale, stats.onlyChildGender.nonOnlyChildFemale]
+            data: [stats.onlyChildGender.onlyChildFemale, stats.onlyChildGender.nonOnlyChildFemale]
     }
     ]
 };
 myChart12.setOption(option12);
+
 
 // 留守儿童饼图
 var myChart13 = echarts.init(document.getElementById('main13'));
@@ -1071,6 +919,12 @@ var option13 = {
         }
     },
     tooltip: {},
+    grid: {
+        left: '10%',   // 调整左边距
+        right: '10%',  // 调整右边距
+        top: '10%',    // 调整上边距
+        bottom: '200%', // 调整下边距
+    },
     series: [
         {
             name: 'pie',
@@ -1107,52 +961,36 @@ var option13 = {
 myChart13.setOption(option13);
 
 
-/* // 指定图表的配置项和数据
-var option4 = {
+// 家庭结构饼状图
+var myChart14 = echarts.init(document.getElementById('main14'));
+
+// 配置饼状图的选项  
+var option14 = {
     tooltip: {
         trigger: 'item'
     },
     legend: {
-        top: '5%',
-        left: 'center'
+        orient: 'vertical',
+        left: 'left'
     },
     series: [
         {
-            name: 'Access From',
             type: 'pie',
-            radius: ['40%', '70%'],
-            avoidLabelOverlap: false,
-            itemStyle: {
-                borderRadius: 10,
-                borderColor: '#fff',
-                borderWidth: 2
-            },
-            label: {
-                show: false,
-                position: 'center'
-            },
-            emphasis: {
-                label: {
-                    show: true,
-                    fontSize: 40,
-                    fontWeight: 'bold'
-                }
-            },
-            labelLine: {
-                show: false
-            },
+            radius: '80%',
             data: [
-                { value: stats.ASE.intervals.veryLow, name: '非常低' },
-                { value: stats.ASE.intervals.low, name: '比较低' },
-                { value: stats.ASE.intervals.moderate, name: '不能确定' },
-                { value: stats.ASE.intervals.high, name: '比较高' },
-                { value: stats.ASE.intervals.veryHigh, name: '非常高' }
-            ]
+                { value: stats.familyStructureCount.singleParent, name: '单亲' },
+                { value: stats.familyStructureCount.dualParent, name: '双亲' }
+            ],
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
         }
     ]
 };
 
-// 把配置项给实例对象
-myChart4.setOption(option4);
-
- */
+// 使用配置生成图表  
+myChart14.setOption(option14);
