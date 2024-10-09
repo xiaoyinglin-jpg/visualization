@@ -912,12 +912,6 @@ piePatternImg.src = piePatternSrc;
 const bgPatternImg = new Image();
 bgPatternImg.src = bgPatternSrc;
 var option13 = {
-   
-    title: {
-        textStyle: {
-            color: '#235894'
-        }
-    },
     tooltip: {},
     grid: {
         left: '10%',   // 调整左边距
