@@ -860,11 +860,12 @@ function applyFilters(){
     displayFormattedData(filteredData);
 }
 
-// 在文件开头，数据加载后立即执行
-mockData.forEach(item, index) => {
-    item.id = ('00000' + (index + 1).slice(-5);
-});
 
+
+    // 在文件开头，数据加载后立即执行
+    mockData.forEach((item, index) => {
+        item.id = ('00000' + (index + 1)).slice(-5);
+    });
 
 // 显示数据（使用表格）  
 function displayFormattedData(data) {
@@ -876,12 +877,8 @@ function displayFormattedData(data) {
         return;
     }
 
-    // 在文件开头，数据加载后立即执行
-    mockData.forEach((item, index)) => {
-        item.id = ('00000' + (index + 1)).slice(-5)
-    }
-    
-    
+  
+
     data.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `  
