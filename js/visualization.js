@@ -588,7 +588,7 @@ var option6 = {
             const label = params.data.label || '未知学生';
             const ASE = params.data.ASE_data;
             const AB = params.data.AB_data;
-            return `${label}<br/>学业效能: ${ASE}<br/>学业倦怠: ${AB}`;
+            return `ID: ${id}<br/>学业效能: ${ASE}<br/>学业倦怠: ${AB}`;
         }
     },
     xAxis: {
@@ -612,7 +612,7 @@ var option6 = {
             value: [item.ASE_data, item.AB_data],
             ASE_data: item.ASE_data,
             AB_data: item.AB_data,
-            label: item.label // 确保 label 是字符串
+            id: item.id // 确保 label 是字符串
         })),
         symbolSize: 10,
         itemStyle: {
