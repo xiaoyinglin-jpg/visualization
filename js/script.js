@@ -872,6 +872,18 @@ function displayFormattedData(data) {
         return;
     }
 
+    // 使用数组的 forEach 方法遍历每个对象  
+    data.forEach((item, index) => {
+        // 将 index + 1 转换为五位数的字符串，前面填充0  
+        let newId = ('00000' + (index + 1)).slice(-5);
+        // 修改对象的 name 属性  
+        item.name = newId;
+    });
+
+    // 输出修改后的数组以验证结果  
+    console.log(data);
+
+    
     data.forEach(item => {
         const row = document.createElement('tr');
         row.innerHTML = `  
