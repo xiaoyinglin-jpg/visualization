@@ -182,13 +182,13 @@ data.forEach(row => {
     // 收集ASE和AB的数据
     const ASE_data = parseFloat(row.ASE);
     const AB_data = parseFloat(row.AB);
-    const label = row.name; // 从数据中获取学生姓名
+    const id = row.id; // 从数据中获取学生姓名
     // 确保 ASE_data 和 AB_data 是有效数值
     if (!isNaN(ASE_data) && !isNaN(AB_data)) {
         aseAbData.push({
             ASE_data,
             AB_data,
-            label: label || '未知学生' // 如果没有姓名，用默认值
+            id: id || '未知学生' // 如果没有姓名，用默认值
         });
     }
     console.log('aseAbData:', aseAbData); // 输出检查数据格式
@@ -585,7 +585,7 @@ var myChart6 = echarts.init(document.getElementById('main6'));
 var option6 = {
     tooltip: {
         formatter: function (params) {
-            const label = params.data.label || '未知学生';
+            const id = params.data.id || '未知学生';
             const ASE = params.data.ASE_data;
             const AB = params.data.AB_data;
             return `ID: ${id}<br/>学业效能: ${ASE}<br/>学业倦怠: ${AB}`;
@@ -612,7 +612,7 @@ var option6 = {
             value: [item.ASE_data, item.AB_data],
             ASE_data: item.ASE_data,
             AB_data: item.AB_data,
-            id: item.id // 确保 label 是字符串
+            id: item.id 
         })),
         symbolSize: 10,
         itemStyle: {
@@ -912,6 +912,12 @@ piePatternImg.src = piePatternSrc;
 const bgPatternImg = new Image();
 bgPatternImg.src = bgPatternSrc;
 var option13 = {
+   
+    title: {
+        textStyle: {
+            color: '#235894'
+        }
+    },
     tooltip: {},
     grid: {
         left: '10%',   // 调整左边距
