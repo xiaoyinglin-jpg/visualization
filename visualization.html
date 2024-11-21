@@ -2,255 +2,536 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>可视化大屏</title>
-	<!-- 使用外部 CDN 引入必要的库和样式文件 -->
-	<!-- 引入 CSS 文件 -->
-	<link rel="stylesheet" href="css/iconfont.css">
-	<link rel="stylesheet" href="./css/test-1024.css?v=20241008"> <!-- 根据屏幕尺寸引入适配的 CSS 文件 -->
-	<!-- 引入 JS 文件 -->
-	<script src="js/jquery.min.js"></script> <!-- 确保 js 文件路径正确 -->
-	<script src="js/echarts.min.js"></script> <!-- 确保 ECharts 文件路径正确 -->
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="./css/test-1024.css?v=20241008">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/echarts.min.js"></script>
+    <style>
+        .chart-controls {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+        
+        .chart-category {
+            margin: 10px 0;
+        }
+        
+        .main-buttons {
+            margin-bottom: 20px;
+        }
+        
+        .main-buttons button {
+            padding: 10px 20px;
+            margin: 0 15px;
+            border: none;
+            border-radius: 5px;
+            background: #0b88be;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+        
+        .sub-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .sub-buttons button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(11, 136, 190, 0.7);
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        
+        .main-buttons button:hover,
+        .sub-buttons button:hover {
+            background: #0a6d99;
+            transform: translateY(-2px);
+        }
+        
+        .main-buttons button.active,
+        .sub-buttons button.active {
+            background: #064d6e;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .chart-group {
+            display: none;
+            padding: 20px;
+        }
+
+        .chart-group.active {
+            display: block;
+        }
+
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .chart-item {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin: 10px;
+            min-width: 400px;
+        }
+
+        .chart-item.inactive {
+            display: none;
+        }
+
+        .chart-item.active {
+            display: block;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+        }
+
+        .com-count-title {
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 10px;
+            background: rgba(11, 136, 190, 0.1);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .chart-item.inactive .com-count-title {
+            opacity: 0.5;
+        }
+
+        .container-header h3 {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            font-size: 24px;
+            text-align: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            margin: 20px;
+        }
+
+        /* 添加响应式布局样式 */
+        @media screen and (max-width: 768px) {
+            /* 手机端样式 */
+            .container-content .top {
+                flex-direction: column;
+            }
+            
+            .count-base, .count-resource, .count-share {
+                width: 95% !important;
+                margin: 10px auto !important;
+                height: auto !important;
+            }
+            
+            .com-count-title {
+                font-size: 14px;
+            }
+            
+            [id^="main"] {
+                height: 250px !important;
+            }
+            
+            .chart-controls {
+                padding: 10px;
+            }
+            
+            .main-buttons button {
+                font-size: 12px;
+                padding: 8px;
+                margin: 5px;
+            }
+            
+            .sub-buttons button {
+                font-size: 11px;
+                padding: 6px;
+                margin: 3px;
+            }
+        }
+
+        @media screen and (min-width: 769px) and (max-width: 1024px) {
+            /* 平板端样式 */
+            .count-base, .count-resource {
+                width: 45% !important;
+            }
+            
+            .count-share {
+                width: 95% !important;
+                margin: 10px auto !important;
+            }
+            
+            [id^="main"] {
+                height: 280px !important;
+            }
+        }
+
+        /* 确保图表容器响应式 */
+        [id^="main"] {
+            width: 100% !important;
+        }
+
+        /* 优化触摸设备的交互 */
+        @media (hover: none) {
+            .main-buttons button,
+            .sub-buttons button {
+                padding: 12px 20px;
+            }
+        }
+
+        /* 优化横屏模式 */
+        @media screen and (orientation: landscape) and (max-width: 900px) {
+            .container-content .top {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .count-base, .count-resource {
+                width: 45% !important;
+            }
+        }
+
+        /* 添加打印样式 */
+        @media print {
+            .chart-controls {
+                display: none;
+            }
+            
+            .container-content {
+                width: 100% !important;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="container-header">
-    <ul class="nowTime">
-        <li></li>
-        <li></li>
-    </ul>
-    <div class="location">
-        <i class="icon iconfont icon-buoumaotubiao23"></i>
-        <span class="areaName"></span>
-    </div>
-    <h3>“代际差异视域下亲子教育期望”数据可视化大平台</h3>
-</div>
-<div class="container-content">
-    <div class="top">
-		<div class="count-base" >
-			<div class="com-count-title">家长教育期望饼图</div>
-			<div class="com-screen-content">
-				<ul class="use-data"></ul>
-				<!--现在这里要放图表-->
-				<div id="main1" style="width:100%;height:300px;"></div>
-			</div>
-			<span class="left-top"></span>
-			<span class="right-top"></span>
-			<span class="left-bottom"></span>
-			<span class="right-bottom"></span>
-		</div>
-		<div class="count-resource q1">
-			<div class="com-count-title">孩子自我期望饼图</div>
-			<div class="com-screen-content2">
-				<ul class="use-data">
-					
-				</ul>
-				<div class="com-screen-content">
-				 <div id="main2" style="width:100%;height:300px;"></div>
-				</div>
-				<span class="left-top"></span>
-				<span class="right-top"></span>
-				<span class="left-bottom"></span>
-				<span class="right-bottom"></span>
-			</div>
-		</div>
-		<div class="count-resource q2">
-			<div class="com-count-title">亲子教育期望对比图</div>
-			<div class="com-screen-content">
-				<ul class="use-data">
-
-				</ul>
-			 <div id="main3" style="margin-top:10px;width:100%;height:240px;"></div>
-			</div>
-			<span class="left-top"></span>
-			<span class="right-top"></span>
-			<span class="left-bottom"></span>
-			<span class="right-bottom"></span>
-		</div>
+    <div class="container-header">
+        <h3>"代际差异视域下亲子教育期望"数据可视化大平台</h3>
     </div>
 
-	<div>
-		<div class="count-base">
-			<div class="com-count-title">学业自我效能感饼图</div>
-			<div class="com-screen-content">
-				<ul class="use-data">
-				</ul>
-				<div id="main4" style="width:100%;height:300px;"></div>
-			</div>
-			<span class="left-top"></span>
-			<span class="right-top"></span>
-			<span class="left-bottom"></span>
-			<span class="right-bottom"></span>
-		</div>
-		<div class="count-resource q1">
-			<div class="com-count-title">学业倦怠饼图</div>
-			<div class="com-screen-content2">
-				<ul class="use-data">
-				</ul>
-				<div class="com-screen-content">
-					<div id="main5" style="width:100%;height:300px;"></div>
-				</div>
-				<span class="left-top"></span>
-				<span class="right-top"></span>
-				<span class="left-bottom"></span>
-				<span class="right-bottom"></span>
-			</div>
-		</div>
-		<div class="count-resource q2">
-			<div class="com-count-title">学业效能倦怠相关图</div>
-			<div class="com-screen-content">
-				<ul class="use-data">
-		
-				</ul>
-				<div id="main6" style="margin-top:10px;width:100%;height:240px;"></div>
-			</div>
-			<span class="left-top"></span>
-			<span class="right-top"></span>
-			<span class="left-bottom"></span>
-			<span class="right-bottom"></span>
-		</div>
-	</div>
+    <div class="chart-controls">
+        <div class="chart-category">
+            <div class="main-buttons">
+                <button onclick="showAllCharts()" class="active">所有图表</button>
+                <button onclick="showChartGroup('demographic')">人口学变量</button>
+                <button onclick="showChartGroup('core')">核心变量</button>
+                <button onclick="showChartGroup('correlation')">关联性分析</button>
+            </div>
+            
+            <div class="sub-buttons" id="chartButtons">
+                <!-- 人口学变量按钮 -->
+                <button onclick="toggleChart('main9')" class="demographic-btn">年级分布</button>
+                <button onclick="toggleChart('main10')" class="demographic-btn">性别分布</button>
+                <button onclick="toggleChart('main11')" class="demographic-btn">居住地分布</button>
+                <button onclick="toggleChart('main12')" class="demographic-btn">独生状况</button>
+                <button onclick="toggleChart('main13')" class="demographic-btn">留守状况</button>
+                <button onclick="toggleChart('main14')" class="demographic-btn">家庭结构</button>
+                
+                <!-- 核心变量按钮 -->
+                <button onclick="toggleChart('main1')" class="core-btn">家长期望</button>
+                <button onclick="toggleChart('main2')" class="core-btn">孩子期望</button>
+                <button onclick="toggleChart('main3')" class="core-btn">代际对比</button>
+                <button onclick="toggleChart('main4')" class="core-btn">学业效能感</button>
+                <button onclick="toggleChart('main5')" class="core-btn">学业倦怠</button>
+                
+                <!-- 关联性分析按钮 -->
+                <button onclick="toggleChart('main6')" class="correlation-btn">效能倦怠关系</button>
+                <button onclick="toggleChart('main7')" class="correlation-btn">期望差距效能</button>
+                <button onclick="toggleChart('main8')" class="correlation-btn">期望差距倦怠</button>
+            </div>
+        </div>
+    </div>
 
-	<div class="mid">
-		<div class="count-share w1" >
-			<div class="com-count-title">亲子期望差距与学业效能关系图</div>
-			<div class="com-screen-content">
-				    <div class="topRec_List">
-						<div  id="main7" style="width:100%;height:300px;">
-						
-						</div>
-					</div>
-			</div>
-			<span class="left-top"></span>
-			<span class="right-top"></span>
-			<span class="left-bottom"></span>
-			<span class="right-bottom"></span>
-		</div>
-		<div class="count-share w2" >
-			<div class="com-count-title">亲子期望差距与学业倦怠关系图</div>
-			<div class="com-screen-content">
-			 <div id="main8" style="width:100%;height:300px;"></div>
-			</div>
-			<span class="left-top"></span>
-			<span class="right-top"></span>
-			<span class="left-bottom"></span>
-			<span class="right-bottom"></span>
-		</div>
-	</div>
-	<div>
-		<div class="count-base">
-			<div class="com-count-title">学生年级柱状图</div>
-			<div class="com-screen-content">
-				<ul class="use-data">
-				</ul>
-				<div id="main9" style="width:100%;height:300px;"></div>
-			</div>
-			<span class="left-top"></span>
-			<span class="right-top"></span>
-			<span class="left-bottom"></span>
-			<span class="right-bottom"></span>
-		</div>
-		<div class="count-resource q1">
-			<div class="com-count-title">学生性别饼图</div>
-			<div class="com-screen-content2">
-				<ul class="use-data">
-				</ul>
-				<div class="com-screen-content">
-					<div id="main10" style="margin-top:10px;width:100%;height:240px;"></div>
-				</div>
-				<span class="left-top"></span>
-				<span class="right-top"></span>
-				<span class="left-bottom"></span>
-				<span class="right-bottom"></span>
-			</div>
-		</div>
-		<div class="count-resource q2">
-			<div class="com-count-title">家庭居住地方饼图</div>
-			<div class="com-screen-content">
-				<ul class="use-data">
-	
-				</ul>
-				<div id="main11" style="margin-top:10px;width:100%;height:240px;"></div>
-			</div>
-			<span class="left-top"></span>
-			<span class="right-top"></span>
-			<span class="left-bottom"></span>
-			<span class="right-bottom"></span>
-		</div>
-	</div>
+    <div class="container-content">
+        <!-- 人口学变量组 -->
+        <div id="demographic-charts" class="chart-group">
+            <div class="chart-container">
+                <div class="chart-item">
+                    <div class="com-count-title">学生年级分布</div>
+                    <div id="main9" style="width:400px;height:300px;"></div>
+                </div>
+                <div class="chart-item">
+                    <div class="com-count-title">性别分布</div>
+                    <div id="main10" style="width:400px;height:300px;"></div>
+                </div>
+                <div class="chart-item">
+                    <div class="com-count-title">家庭居住地分布</div>
+                    <div id="main11" style="width:400px;height:300px;"></div>
+                </div>
+                <div class="chart-item">
+                    <div class="com-count-title">独生状况分布</div>
+                    <div id="main12" style="width:400px;height:300px;"></div>
+                </div>
+                <div class="chart-item">
+                    <div class="com-count-title">留守儿童状况</div>
+                    <div id="main13" style="width:400px;height:300px;"></div>
+                </div>
+                <div class="chart-item">
+                    <div class="com-count-title">家庭结构分布</div>
+                    <div id="main14" style="width:400px;height:300px;"></div>
+                </div>
+            </div>
+        </div>
 
-	<div class="top">
-		<div class="count-base">
-			<div class="com-count-title">独生状况饼图</div>
-			<div class="com-screen-content">
-				<ul class="use-data"></ul>
-				<!--现在这里要放图表-->
-				<div id="main12" style="width:100%;height:300px;"></div>
-			</div>
-			<span class="left-top"></span>
-			<span class="right-top"></span>
-			<span class="left-bottom"></span>
-			<span class="right-bottom"></span>
-		</div>
-		<div class="count-resource q1">
-			<div class="com-count-title">留守儿童状况饼图</div>
-			<div class="com-screen-content2">
-				<ul class="use-data">
-	
-				</ul>
-				<div class="com-screen-content">
-					<div id="main13" style="margin-top:10px;width:100%;height:240px;"></div>
-				</div>
-				<span class="left-top"></span>
-				<span class="right-top"></span>
-				<span class="left-bottom"></span>
-				<span class="right-bottom"></span>
-			</div>
-		</div>
-		<div class="count-resource q2">
-			<div class="com-count-title">家庭结构饼图</div>
-			<div class="com-screen-content">
-				<ul class="use-data">
-	
-				</ul>
-				<div id="main14" style="margin-top:10px;width:100%;height:240px;"></div>
-			</div>
-			<span class="left-top"></span>
-			<span class="right-top"></span>
-			<span class="left-bottom"></span>
-			<span class="right-bottom"></span>
-		</div>
-	</div>
-</div>
+        <!-- 核心变量组 -->
+        <div id="core-charts" class="chart-group">
+            <div class="chart-container">
+                <div class="chart-item">
+                    <div class="com-count-title">家长教育期望分布</div>
+                    <div id="main1" style="width:400px;height:300px;"></div>
+                </div>
+                <div class="chart-item">
+                    <div class="com-count-title">孩子自我期望分布</div>
+                    <div id="main2" style="width:400px;height:300px;"></div>
+                </div>
+                <div class="chart-item">
+                    <div class="com-count-title">代际教育期望对比</div>
+                    <div id="main3" style="width:400px;height:300px;"></div>
+                </div>
+                <div class="chart-item">
+                    <div class="com-count-title">学业自我效能感分布</div>
+                    <div id="main4" style="width:400px;height:300px;"></div>
+                </div>
+                <div class="chart-item">
+                    <div class="com-count-title">学业倦怠分布</div>
+                    <div id="main5" style="width:400px;height:300px;"></div>
+                </div>
+            </div>
+        </div>
 
-<script type="text/javascript"> 
-//根据不同的分辨率调用不同的css和js
-	if(window.screen.width>=1600){
-		document.write("<link href='css/test-1920.css' rel='stylesheet' type='text/css'>");  
-		
-		document.writeln("<script type=\"text/javascript\" src=\"js/test-1920.js\"><\/script>");
-	}
-	else if(window.screen.width<1600&&window.screen.width>=1280){
-		document.write("<link href='css/test-1280.css' rel='stylesheet' type='text/css'>");  
-		
-		document.writeln("<script type=\"text/javascript\" src=\"js/test-1280.js\"><\/script>");
-	}else{
-	document.write("<link href='css/test-1024.css' rel='stylesheet' type='text/css'>");  
-		
-		document.writeln("<script type=\"text/javascript\" src=\"js/test-1024.js\"><\/script>");
-	}
-</script>
-<!--大屏-->
-<script type="text/javascript"> 
-	  function autoScroll(obj){  
-			$(obj).find("ul").animate({  
-				marginTop : "-39px"  
-			},500,function(){  
-				$(this).css({marginTop : "0px"}).find("li:first").appendTo(this);  
-			})  
-		}  
-		$(function(){  
-			setInterval('autoScroll(".maquee")',2000);
-		}) 
-</script> 
-<script src="js/visualization.js"></script>
+        <!-- 关联性分析组 -->
+        <div id="correlation-charts" class="chart-group">
+            <div class="chart-container">
+                <div class="chart-item">
+                    <div class="com-count-title">学业效能与学业倦怠关系</div>
+                    <div id="main6" style="width:400px;height:300px;"></div>
+                </div>
+                <div class="chart-item">
+                    <div class="com-count-title">代际期望差距与学业效能关系</div>
+                    <div id="main7" style="width:400px;height:300px;"></div>
+                </div>
+                <div class="chart-item">
+                    <div class="com-count-title">代际期望差距与学业倦怠关系</div>
+                    <div id="main8" style="width:400px;height:300px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 显示所有图表
+        function showAllCharts() {
+            document.querySelectorAll('.chart-group').forEach(group => {
+                group.style.display = 'block';
+            });
+            document.querySelectorAll('.chart-item').forEach(item => {
+                item.style.display = 'block';
+                item.classList.remove('inactive');
+                item.classList.add('active');
+            });
+            document.querySelectorAll('.sub-buttons button').forEach(button => {
+                button.classList.add('active');
+            });
+            setActiveButton('all');
+            updateSubButtons('all');
+            
+            // 重新渲染所有图表
+            document.querySelectorAll('[id^="main"]').forEach(chartDiv => {
+                const chart = echarts.getInstanceByDom(chartDiv);
+                if (chart) {
+                    chart.resize();
+                }
+            });
+        }
+
+        // 显示特定组的图表
+        function showChartGroup(groupName) {
+            document.querySelectorAll('.chart-group').forEach(group => {
+                group.style.display = 'none';
+            });
+            document.getElementById(groupName + '-charts').style.display = 'block';
+            
+            // 显示该组所有图表
+            const currentGroup = document.getElementById(groupName + '-charts');
+            currentGroup.querySelectorAll('.chart-item').forEach(item => {
+                item.style.display = 'block';
+                item.classList.remove('inactive');
+                item.classList.add('active');
+            });
+            
+            setActiveButton(groupName);
+            updateSubButtons(groupName);
+            
+            // 重新渲染当前组的图表
+            currentGroup.querySelectorAll('[id^="main"]').forEach(chartDiv => {
+                const chart = echarts.getInstanceByDom(chartDiv);
+                if (chart) {
+                    chart.resize();
+                }
+            });
+        }
+
+        // 切换单个图表的显示
+        function toggleChart(chartId) {
+            const chartItem = document.getElementById(chartId).closest('.chart-item');
+            const button = document.querySelector(`button[onclick="toggleChart('${chartId}')"]`);
+            
+            if (chartItem.classList.contains('inactive')) {
+                // 显示图表
+                chartItem.style.display = 'block';
+                chartItem.classList.remove('inactive');
+                chartItem.classList.add('active');
+                button.classList.add('active');
+                
+                // 重新渲染图表
+                const chart = echarts.getInstanceByDom(document.getElementById(chartId));
+                if (chart) {
+                    setTimeout(() => {
+                        chart.resize();
+                    }, 300); // 添加延时以确保DOM更新后再重绘
+                }
+            } else {
+                // 隐藏图表
+                chartItem.style.display = 'none';
+                chartItem.classList.remove('active');
+                chartItem.classList.add('inactive');
+                button.classList.remove('active');
+            }
+        }
+
+        // 更新子按钮显示
+        function updateSubButtons(type) {
+            const buttons = document.querySelectorAll('.sub-buttons button');
+            buttons.forEach(button => {
+                if (type === 'all') {
+                    button.style.display = 'inline-block';
+                    button.classList.add('active');
+                } else {
+                    if (button.classList.contains(type + '-btn')) {
+                        button.style.display = 'inline-block';
+                        button.classList.add('active');
+                    } else {
+                        button.style.display = 'none';
+                        button.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        // 设置活动按钮
+        function setActiveButton(type) {
+            document.querySelectorAll('.main-buttons button').forEach(button => {
+                button.classList.remove('active');
+            });
+            const buttonMap = {
+                'all': 0,
+                'demographic': 1,
+                'core': 2,
+                'correlation': 3
+            };
+            document.querySelectorAll('.main-buttons button')[buttonMap[type]].classList.add('active');
+        }
+
+        // 初始显示所有图表
+        showAllCharts();
+
+        // 添加窗口大小改变时的图表重绘
+        window.addEventListener('resize', function() {
+            document.querySelectorAll('[id^="main"]').forEach(chartDiv => {
+                const chart = echarts.getInstanceByDom(chartDiv);
+                if (chart) {
+                    chart.resize();
+                }
+            });
+        });
+
+        // 监听窗口大小变化，重新渲染图表
+        window.addEventListener('resize', function() {
+            // 添加防抖
+            clearTimeout(window.resizeTimer);
+            window.resizeTimer = setTimeout(function() {
+                document.querySelectorAll('[id^="main"]').forEach(chartDiv => {
+                    const chart = echarts.getInstanceByDom(chartDiv);
+                    if (chart) {
+                        chart.resize();
+                    }
+                });
+            }, 250);
+        });
+
+        // 检测设备类型
+        function detectDevice() {
+            const ua = navigator.userAgent;
+            if (/Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(ua)) {
+                return 'mobile';
+            } else if (/iPad|tablet/i.test(ua)) {
+                return 'tablet';
+            }
+            return 'desktop';
+        }
+
+        // 根据设备类型调整图表配置
+        document.addEventListener('DOMContentLoaded', function() {
+            const deviceType = detectDevice();
+            const charts = document.querySelectorAll('[id^="main"]');
+            
+            charts.forEach(chartDiv => {
+                const chart = echarts.getInstanceByDom(chartDiv);
+                if (chart) {
+                    let option = chart.getOption();
+                    
+                    // 根据设备类型调整图表配置
+                    if (deviceType === 'mobile') {
+                        // 移动端优化
+                        if (option.legend) {
+                            option.legend.textStyle = { fontSize: 12 };
+                        }
+                        if (option.xAxis) {
+                            option.xAxis.axisLabel = { fontSize: 10, interval: 'auto' };
+                        }
+                        if (option.yAxis) {
+                            option.yAxis.axisLabel = { fontSize: 10 };
+                        }
+                    }
+                    
+                    chart.setOption(option);
+                }
+            });
+        });
+
+        // 添加触摸事件支持
+        if ('ontouchstart' in window) {
+            document.querySelectorAll('.chart-item').forEach(item => {
+                item.addEventListener('touchstart', function(e) {
+                    this.style.transform = 'scale(0.98)';
+                });
+                
+                item.addEventListener('touchend', function(e) {
+                    this.style.transform = 'translateY(-2px)';
+                });
+            });
+        }
+    </script>
+    <script src="js/visualization.js"></script>
 </body>
 </html>
