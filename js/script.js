@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', function (){
             // 清除筛选条件和取消复选框勾选
             clearAllFilters();
             document.getElementById('visualCheckbox').checked = false;
+            // 重新显示所有数据
+            displayFormattedData(mockData);
         }
     });
     
