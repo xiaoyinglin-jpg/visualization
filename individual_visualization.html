@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>个人数据可视化</title>
+    <link rel="stylesheet" href="./css/individual.css">
+    <script src="js/echarts.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h2>个人数据分析</h2>
+        <div class="info-container">
+            <div class="student-info">
+                <h3>基本信息</h3>
+                <p>学号: <span id="studentId"></span></p>
+                <p>姓名: <span id="studentName"></span></p>
+            </div>
+            
+            <div class="data-grid">
+                <div class="data-item">
+                    <h4>父母教育期望</h4>
+                    <p>数值: <span id="parentExpValue"></span></p>
+                    <p>排名: <span id="parentExpRank"></span></p>
+                    <p>百分位: <span id="parentExpPercentile"></span></p>
+                </div>
+                
+                <div class="data-item">
+                    <h4>孩子教育期望</h4>
+                    <p>数值: <span id="childExpValue"></span></p>
+                    <p>排名: <span id="childExpRank"></span></p>
+                    <p>百分位: <span id="childExpPercentile"></span></p>
+                </div>
+                
+                <div class="data-item">
+                    <h4>学业自我效能感</h4>
+                    <p>数值: <span id="aseValue"></span></p>
+                    <p>排名: <span id="aseRank"></span></p>
+                    <p>百分位: <span id="asePercentile"></span></p>
+                </div>
+                
+                <div class="data-item">
+                    <h4>学业倦怠</h4>
+                    <p>数值: <span id="abValue"></span></p>
+                    <p>排名: <span id="abRank"></span></p>
+                    <p>百分位: <span id="abPercentile"></span></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="charts-container">
+            <div id="radarChart" style="width:50%;height:400px;"></div>
+            <div id="barChart" style="width:50%;height:400px;"></div>
+        </div>
+        <button onclick="returnToIndex()" class="return-btn">返回</button>
+    </div>
+    <script src="js/individual_visualization.js"></script>
+</body>
+</html> 
