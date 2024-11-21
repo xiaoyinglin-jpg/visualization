@@ -7,19 +7,22 @@
     <title>教育数据筛选页面</title>
     <!-- 引入CSS文件 -->
     <link rel="stylesheet" href="./css/index.css">
-    
-    
+
 </head>
 
 <body>
     <!-- 顶部容器 -->
- 
-
     <!-- 内容容器 -->
     <div class="content">
         <!-- 左侧导航栏：筛选条件 -->
         <div class="filter-bar">
             <h3>筛选条件</h3>
+            <label>学生编号</label>
+            <input type="text" id="studentId" placeholder="请输入学生编号">
+
+            <label>姓名</label>
+            <input type="text" id="studentName" placeholder="请输入学生姓名">
+
             <label>性别</label>
             <select id="gender">
                 <option value="">全部</option>
@@ -105,7 +108,7 @@
     <!-- 引入JS文件 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="js/echarts.min.js"></script> <!-- 确保 ECharts 文件路径正确 -->
-    <script src="./js/script.js"></script>
+    <script type="module" src="./js/script.js"></script>
 </body>
 
 </html>
