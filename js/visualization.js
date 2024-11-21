@@ -4,22 +4,22 @@ const data = JSON.parse(localStorage.getItem("filteredData"));
 // 定义统计结果
 const stats = {
     gender: {
-        male: 0,  // gender 1 -> male
-        female: 0 // gender 2 -> female
+        male: 0,  // gender 1 -> 男
+        female: 0 // gender 2 -> 女
     },
     age: {},
     residence: {
-        urban: 0,  // residence 1 -> urban
-        rural: 0   // residence 2 -> rural
+        urban: 0,  // residence 1 -> 城市
+        rural: 0   // residence 2 -> 农村
     },
     grade: {
-        primary: 0, // grade 1 -> primary
-        middle: 0, // grade 2 -> middle
-        high: 0    // grade 3 -> high
+        primary: 0, // grade 1 -> 七年级
+        middle: 0, // grade 2 -> 八年级
+        high: 0    // grade 3 -> 九年级
     },
     onlyChild: {
-        yes: 0,  // onlyChild 1 -> yes
-        no: 0    // onlyChild 2 -> no
+        yes: 0,  // onlyChild 1 -> 独生
+        no: 0    // onlyChild 2 -> 非独生
     },
     onlyChildGender: {
         onlyChildMale: 0,  // 只有一个男孩
@@ -28,31 +28,33 @@ const stats = {
         nonOnlyChildFemale: 0 // 非独生女
     },
     leftBehind: {
-        yes: 0,  // leftBehind 1 -> yes
-        no: 0    // leftBehind 2 -> no
+        yes: 0,  // leftBehind 1 -> 留守儿童
+        no: 0    // leftBehind 2 -> 非留守儿童
     },
     familyStructure: {
-        nuclear: 0,  // familyStructure 1 -> nuclear
-        extended: 0  // familyStructure 2 -> extended
+        nuclear: 0,  // familyStructure 1 -> 单亲
+        extended: 0  // familyStructure 2 -> 双亲
     },
     EE_Post_P: {
-        total: 0,  // Sum for calculating average later
-        count: 0,  // Count for calculating average
+        total: 0,  // 计算总和然后来计算平均值
+        count: 0,  // 计算有多少数量
         stages: {
-            veryLow: 0,    // <= 1.5
-            low: 0,        // <= 2.5
-            moderate: 0,   // <= 3.5
-            high: 0        // <= 4
+            veryLow: 0,    // <= 0.8
+            low: 0,        // <= 1.6
+            moderate: 0,   // <= 2.4
+            high: 0,       // <= 3.2
+            veryHigh: 0    // <= 4
         }
     },
     EE_Post_S: {
         total: 0,  // Sum for calculating average later
         count: 0,  // Count for calculating average
         stages: {
-            veryLow: 0,    // <= 1.5
-            low: 0,        // <= 2.5
-            moderate: 0,   // <= 3.5
-            high: 0        // <= 4
+            veryLow: 0,    // <= 0.8
+            low: 0,        // <= 1.6
+            moderate: 0,   // <= 2.4
+            high: 0,       // <= 3.2
+            veryHigh: 0   // <= 4
         }
     },
     ASE: {
@@ -96,7 +98,8 @@ const intergenerationalGapStats = {
     noGap: { ToASE: { veryLow: 0, low: 0, moderate: 0, high: 0, veryHigh: 0 }, ToAB: { veryLow: 0, low: 0, moderate: 0, high: 0, veryHigh: 0 }, count: 0 },
     smallGap: { ToASE: { veryLow: 0, low: 0, moderate: 0, high: 0, veryHigh: 0 }, ToAB: { veryLow: 0, low: 0, moderate: 0, high: 0, veryHigh: 0 }, count: 0 },
     significantGap: { ToASE: { veryLow: 0, low: 0, moderate: 0, high: 0, veryHigh: 0 }, ToAB: { veryLow: 0, low: 0, moderate: 0, high: 0, veryHigh: 0 }, count: 0 },
-    largeGap: { ToASE: { veryLow: 0, low: 0, moderate: 0, high: 0, veryHigh: 0 }, ToAB: { veryLow: 0, low: 0, moderate: 0, high: 0, veryHigh: 0 }, count: 0 }
+    largeGap: { ToASE: { veryLow: 0, low: 0, moderate: 0, high: 0, veryHigh: 0 }, ToAB: { veryLow: 0, low: 0, moderate: 0, high: 0, veryHigh: 0 }, count: 0 },
+    veryLargeGap: { ToASE: { veryLow: 0, low: 0, moderate: 0, high: 0, veryHigh: 0 }, ToAB: { veryLow: 0, low: 0, moderate: 0, high: 0, veryHigh: 0 }, count: 0 }
 };
 
 // 遍历数据进行统计
@@ -143,19 +146,21 @@ data.forEach(row => {
 
     // 统计 EE_Post_P
     const EE_Post_P = parseFloat(row.EE_Post_P);
-    if (EE_Post_P <= 1.5) stats.EE_Post_P.stages.veryLow++;
-    else if (EE_Post_P <= 2.5) stats.EE_Post_P.stages.low++;
-    else if (EE_Post_P <= 3.5) stats.EE_Post_P.stages.moderate++;
-    else if (EE_Post_P <= 4.0) stats.EE_Post_P.stages.high++;
+    if (EE_Post_P <= 0.8) stats.EE_Post_P.stages.veryLow++;
+    else if (EE_Post_P <= 1.6) stats.EE_Post_P.stages.low++;
+    else if (EE_Post_P <= 2.4) stats.EE_Post_P.stages.moderate++;
+    else if (EE_Post_P <= 3.2) stats.EE_Post_P.stages.high++;
+    else if (EE_Post_P <= 4.0) stats.EE_Post_P.stages.veryHigh++;
     stats.EE_Post_P.total += EE_Post_P;
     stats.EE_Post_P.count++;
 
     // 统计 EE_Post_S
     const EE_Post_S = parseFloat(row.EE_Post_S);
-    if (EE_Post_S <= 1.5) stats.EE_Post_S.stages.veryLow++;
-    else if (EE_Post_S <= 2.5) stats.EE_Post_S.stages.low++;
-    else if (EE_Post_S <= 3.5) stats.EE_Post_S.stages.moderate++;
-    else if (EE_Post_S <= 4.0) stats.EE_Post_S.stages.high++;
+    if (EE_Post_S <= 0.8) stats.EE_Post_S.stages.veryLow++;
+    else if (EE_Post_S <= 1.6) stats.EE_Post_S.stages.low++;
+    else if (EE_Post_S <= 2.4) stats.EE_Post_S.stages.moderate++;
+    else if (EE_Post_S <= 3.2) stats.EE_Post_S.stages.high++;
+    else if (EE_Post_S <= 4.0) stats.EE_Post_S.stages.veryHigh++;
     stats.EE_Post_S.total += EE_Post_S;
     stats.EE_Post_S.count++;
 
@@ -200,14 +205,17 @@ data.forEach(row => {
 
     // 确定差距类别
     let gapCategory;
-    if (gap <= 1) {
+    if (gap <= 0.8) {
         gapCategory = 'noGap';
-    } else if (gap <= 2) {
+    } else if (gap <= 1.6) {
         gapCategory = 'smallGap';
-    } else if (gap <= 3) {
+    } else if (gap <= 2.4) {
         gapCategory = 'significantGap';
-    } else if (gap <= 4) {
+    } else if (gap <= 3.2) {
         gapCategory = 'largeGap';
+    }
+    else if (gap <= 4.0) {
+        gapCategory = 'veryLargeGap';
     }
 
     // 将 ToASE 数据按照其等级分组统计
@@ -292,13 +300,14 @@ const gapProportions = {
     noGap: calculateProportions(intergenerationalGapStats.noGap),
     smallGap: calculateProportions(intergenerationalGapStats.smallGap),
     significantGap: calculateProportions(intergenerationalGapStats.significantGap),
-    largeGap: calculateProportions(intergenerationalGapStats.largeGap)
+    largeGap: calculateProportions(intergenerationalGapStats.largeGap),
+    veryLargeGap: calculateProportions(intergenerationalGapStats.veryLargeGap)
 }
 
 // 生成 ECharts 数据格式（ToASE 和 ToAB 数据）
 const datasetSourceToASE = [
     ['Level', '无差距', '小差距', '显著差距', '巨大差距'],
-    ['非常低', gapProportions.noGap.ToASE.veryLow || 0, gapProportions.smallGap.ToASE.veryLow || 0, gapProportions.significantGap.ToASE.veryLow || 0, gapProportions.largeGap.ToASE.veryLow || 0],
+    ['非常低', gapProportions.noGap.ToASE.veryLow || 0, gapProportions.smallGap.ToASE.veryLow || 0, gapProportions.significantGap.ToASE.veryLow || 0, gapProportions.largeGap.ToASE.veryLow || 0, gapProportions.largeGap.ToASE.veryLow || 0],
     ['比较低', gapProportions.noGap.ToASE.low || 0, gapProportions.smallGap.ToASE.low || 0, gapProportions.significantGap.ToASE.low || 0, gapProportions.largeGap.ToASE.low || 0],
     ['不确定', gapProportions.noGap.ToASE.moderate || 0, gapProportions.smallGap.ToASE.moderate || 0, gapProportions.significantGap.ToASE.moderate || 0, gapProportions.largeGap.ToASE.moderate || 0],
     ['比较高', gapProportions.noGap.ToASE.high || 0, gapProportions.smallGap.ToASE.high || 0, gapProportions.significantGap.ToASE.high || 0, gapProportions.largeGap.ToASE.high || 0],
@@ -353,10 +362,11 @@ var option1 = {
                 smooth: true  // 引导线平滑
             },
             data: [
-                { value: stats.EE_Post_P.stages.veryLow, name: '比较低' },
-                { value: stats.EE_Post_P.stages.low, name: '不能确定' },
-                { value: stats.EE_Post_P.stages.moderate, name: '比较高' },
-                { value: stats.EE_Post_P.stages.high, name: '非常高' }
+                { value: stats.EE_Post_P.stages.veryLow, name: '非常低' },
+                { value: stats.EE_Post_P.stages.low, name: '比较低' },
+                { value: stats.EE_Post_P.stages.moderate, name: '不能确定' },
+                { value: stats.EE_Post_P.stages.high, name: '比较高' },
+                { value: stats.EE_Post_P.stages.veryHigh, name: '非常高' }
             ]
         }
     ]
@@ -399,11 +409,11 @@ var option2 = {
                 show: false
             },
             data: [
-                { value: stats.EE_Post_S.stages.veryLow, name: '比较低' },
-                { value: stats.EE_Post_S.stages.low, name: '不能确定' },
-                { value: stats.EE_Post_S.stages.moderate, name: '比较高' },
-                { value: stats.EE_Post_S.stages.high, name: '非常高' },
-                
+                { value: stats.EE_Post_S.stages.veryLow, name: '非常低' },
+                { value: stats.EE_Post_S.stages.low, name: '比较低' },
+                { value: stats.EE_Post_S.stages.moderate, name: '不能确定' },
+                { value: stats.EE_Post_S.stages.high, name: '比较高' },
+                { value: stats.EE_Post_S.stages.veryHigh, name: '非常高' },     
             ]
         }
     ]
@@ -441,7 +451,7 @@ var option3 = {
             axisTick: {
                 show: false
             },
-            data: ['比较低', '不能确定', '比较高', '非常高']
+            data: ['非常低','比较低', '不能确定', '比较高', '非常高']
         }
     ],
     series: [
@@ -455,7 +465,7 @@ var option3 = {
             emphasis: {
                 focus: 'series'
             },
-            data: [stats.EE_Post_P.stages.veryLow, stats.EE_Post_P.stages.low, stats.EE_Post_P.stages.moderate, stats.EE_Post_P.stages.high]
+            data: [stats.EE_Post_P.stages.veryLow, stats.EE_Post_P.stages.low, stats.EE_Post_P.stages.moderate, stats.EE_Post_P.stages.high, stats.EE_Post_P.stages.veryHigh]
         },
 
         {
@@ -469,7 +479,7 @@ var option3 = {
             emphasis: {
                 focus: 'series'
             },
-            data: [-stats.EE_Post_S.stages.veryLow, -stats.EE_Post_S.stages.low, -stats.EE_Post_S.stages.moderate, -stats.EE_Post_S.stages.high]
+            data: [-stats.EE_Post_S.stages.veryLow, -stats.EE_Post_S.stages.low, -stats.EE_Post_S.stages.moderate, -stats.EE_Post_S.stages.high, -stats.EE_Post_S.stages.veryHigh]
         }
     ]
 };
@@ -636,7 +646,7 @@ var option7 = {
         confine: true  // 确保提示框不会超出图表容器
     },
     legend: {
-        data: ['无差距', '小差距', '显著差距', '大差距'],
+        data: ['无差距', '小差距', '显著差距', 'z中等差距','巨大差距'],
         left: 'left'
     },
     grid: {
@@ -673,10 +683,10 @@ var option7 = {
             data: [gapProportions.significantGap.ToASE.veryLow || 0, gapProportions.significantGap.ToASE.low || 0, gapProportions.significantGap.ToASE.moderate || 0, gapProportions.significantGap.ToASE.high || 0, gapProportions.significantGap.ToASE.veryHigh || 0]
         },
         {
-            name: '大差距',
+            name: '巨大差距',
             type: 'bar',
             data: [gapProportions.largeGap.ToASE.veryLow || 0, gapProportions.largeGap.ToASE.low || 0, gapProportions.largeGap.ToASE.moderate || 0, gapProportions.largeGap.ToASE.high || 0, gapProportions.largeGap.ToASE.veryHigh || 0]
-        }
+        },
     ]
 };
 myChart7.setOption(option7);
@@ -693,7 +703,7 @@ var option8 = {
         }
     },
     legend: {
-        data: ['无差距', '小差距', '显著差距', '大差距'],
+        data: ['无差距', '小差距', '显著差距', '巨大差距'],
         left: 'left'
     },
     grid: {
@@ -730,7 +740,7 @@ var option8 = {
             data: [gapProportions.significantGap.ToAB.veryLow || 0, gapProportions.significantGap.ToAB.low || 0, gapProportions.significantGap.ToAB.moderate || 0, gapProportions.significantGap.ToAB.high || 0, gapProportions.significantGap.ToAB.veryHigh || 0]
         },
         {
-            name: '大差距',
+            name: '巨大差距',
             type: 'bar',
             data: [gapProportions.largeGap.ToAB.veryLow || 0, gapProportions.largeGap.ToAB.low || 0, gapProportions.largeGap.ToAB.moderate || 0, gapProportions.largeGap.ToAB.high || 0, gapProportions.largeGap.ToAB.veryHigh || 0]
         }
