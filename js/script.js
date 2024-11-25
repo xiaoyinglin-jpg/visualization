@@ -45,16 +45,36 @@ document.addEventListener('DOMContentLoaded', function (){
         }
     });
     
-    // 姓名输入框与其他筛选条件互斥
+    // 姓名输入框与其他筛选条件互斥，添加重名检查
     nameInput.addEventListener('input', function() {
         if (this.value) {
-            idInput.value = '';
-            idInput.disabled = true;
-            otherFilters.forEach(filter => {
-                filter.value = '';
-                filter.disabled = true;
-            });
+            // 检查是否有重名
+            const name = this.value;
+            const matchingStudents = mockData.filter(student => student.name === name);
+            
+            if (matchingStudents.length > 1) {
+                // 存在重名情况
+                alert(`存在${matchingStudents.length}个名为"${name}"的学生，请使用学号进行筛选：\n` + 
+                      matchingStudents.map(student => `学号：${student.id}`).join('\n'));
+                
+                // 启用学号输入，禁用其他筛选条件
+                idInput.disabled = false;
+                idInput.value = '';
+                otherFilters.forEach(filter => {
+                    filter.value = '';
+                    filter.disabled = true;
+                });
+            } else {
+                // 无重名，禁用其他所有输入
+                idInput.value = '';
+                idInput.disabled = true;
+                otherFilters.forEach(filter => {
+                    filter.value = '';
+                    filter.disabled = true;
+                });
+            }
         } else {
+            // 清空姓名时启用所有输入
             idInput.disabled = false;
             otherFilters.forEach(filter => {
                 filter.disabled = false;
